@@ -1,0 +1,31 @@
+<!-- articles.html-->
+
+
+
+{% extends "base.html" %}
+
+{% block title %}Articles{% endblock %}
+
+{% block body %}
+
+<div class="jumbotron">
+
+
+
+
+<h1>There you got some articles</h1>
+
+<p class="lead">You can learn more about here</p>
+
+<ul class="list-group">
+  <li class="list-group-item"> <a href="articles/{{articles[0].id}}" target="_blank"> Articulo {{ articles[0].id }}  </a> </li>
+  <li class="list-group-item"> <a href="articles/{{articles[1].id}}" target="_blank"> Articulo {{ articles[1].id }}  </a> </li>
+  <li class="list-group-item"> <a href="articles/{{articles[2].id}}" target="_blank"> Articulo {{ articles[2].id }}  </a> </li>
+</ul
+
+
+
+</div>
+
+{% endblock %}
+
