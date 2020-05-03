@@ -42,7 +42,7 @@ class Add_article(Form):
     date = DateField('Date')
 
 
-class edit_article(Form):
+class Edit_article(Form):
     id = HiddenField('id')
     title = StringField('Title')
     author = StringField('Author')
@@ -61,7 +61,11 @@ def about():
 
 @app.route('/articles')
 def articles():
-    return render_template("articles.html", articles=data)
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * from articles")
+    articles = cur.fetchall()
+    print(articles)
+    return render_template("articles.html", articles=articles)
 
 
 @app.route('/articles/<variable>', methods=['GET'])
@@ -164,7 +168,7 @@ def logout():
 @app.route('/dashboard')
 def dashboard():
     cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM articles WHERE author = 1")
+    cur.execute("SELECT a.id, u.name as 'author', a.title, a.date FROM articles a INNER JOIN users u ON u.id=a.author WHERE u.id = 1")
     articles = cur.fetchall()
     return render_template('dashboard.html', articles=articles)
 
@@ -196,11 +200,19 @@ def add_article():
 @is_logged_in
 @app.route('/edit_article/<id>', methods=['GET', 'POST'])
 def edit_article(id):
-    # if request.method == 'GET':
-        # cur = mysql.connection.cursor()
-        # cur.execute("SELECT * FROM articles where id = %i",
-        #             (session['id']))
-        # form = cur.fetchall()
-        # mysql.connection.commit()
-        # print(session['id'])
-    return render_template('edit_article.html')
+    form = Edit_article(request.form)
+    if request.method == 'GET':
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM articles where id = "+str(id))
+        article = cur.fetchall()
+        print(article[0])
+        return render_template('edit_article.html', article=article[0])
+    else:
+        # print(request.form['id']) 
+        cur = mysql.connection.cursor()
+        cur.execute("UPDATE articles SET title=%s, date=%s WHERE id =%s",(request.form['title'],request.form['date'],int(request.form['id'])))
+        mysql.connection.commit()
+        flash("Article edited succesfully", "success")
+        return redirect(url_for('dashboard'))
+
+
