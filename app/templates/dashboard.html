@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<h1>Dashboard <small> Welcome {{session.username}} </small> </h1>
+<a class="btn btn-success" href="/add_article">Add Article</a>
+<hr>
+
+<table class="table table-striped">
+  <tr>
+    <th>ID</th>
+    <th>Title</th>
+    <th>Author</th>
+    <th>Date</th>
+    <th></th>
+    <th></th>
+  </tr>
+{% for article in articles %}
+  <tr>
+  <td>{{article.id}}</td>  <!-- id -->
+  <td>{{article.title}}</td>  <!-- title -->
+  <td>{{article.author}}</td> <!-- author -->
+  <td>{{article.date}}</td> <!-- create_date -->
+  <td><a href="edit_article/{{article.id}}" class="btn btn-default pull-right">Edit</a>
+  <td>
+    <form  action="{{url_for('delete_article', id=article['id'])}}" method="post">
+      <input type="hidden" name="_method" value="DELETE">
+      <input type="submit" name="" value="Delete" class="btn btn-danger">
+
+    </form>
+  </td>
+  <td></td>
+  </tr>
+{% endfor %}
+</table>
+
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+  Launch demo modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
